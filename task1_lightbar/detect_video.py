@@ -9,7 +9,7 @@ def detect_lightbars(frame):
     hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
 
     # 初始蓝色范围，后续需要根据考核视频调参
-    lower_blue = (90, 80, 60)
+    lower_blue = (80, 120, 110)
     upper_blue = (135, 255, 255)
 
     mask = cv2.inRange(hsv, lower_blue, upper_blue)
@@ -43,7 +43,7 @@ def detect_lightbars(frame):
         area = cv2.contourArea(contour)
 
         # 过滤过小噪声和过大区域
-        if area < 100 or area > 100000:
+        if area < 50 or area > 100000:
             continue
 
         rectangle = cv2.minAreaRect(contour)
