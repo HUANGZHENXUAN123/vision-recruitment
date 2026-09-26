@@ -6,17 +6,42 @@ import cv2
 
 
 def detect_lightbars(frame):
-    hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+    hsv = cv2.cvtColor(
+        frame,
+        cv2.COLOR_BGR2HSV,
+    )
 
-    # 初始蓝色范围，后续需要根据考核视频调参
+    blue_channel, _, red_channel = cv2.split(frame)
+
     lower_blue = (80, 120, 110)
     upper_blue = (135, 255, 255)
 
-    mask = cv2.inRange(hsv, lower_blue, upper_blue)
+    hsv_mask = cv2.inRange(
+        hsv,
+        lower_blue,
+        upper_blue,
+    )
+
+    difference = cv2.subtract(
+        blue_channel,
+        red_channel,
+    )
+
+    _, difference_mask = cv2.threshold(
+        difference,
+        40,
+        255,
+        cv2.THRESH_BINARY,
+    )
+
+    mask = cv2.bitwise_and(
+        hsv_mask,
+        difference_mask,
+    )
 
     kernel = cv2.getStructuringElement(
         cv2.MORPH_RECT,
-        (3, 3),
+        (1, 1),
     )
 
     mask = cv2.morphologyEx(
@@ -42,8 +67,7 @@ def detect_lightbars(frame):
     for contour in contours:
         area = cv2.contourArea(contour)
 
-        # 过滤过小噪声和过大区域
-        if area < 50 or area > 100000:
+        if area < 3 or area > 100000:
             continue
 
         rectangle = cv2.minAreaRect(contour)
@@ -58,8 +82,10 @@ def detect_lightbars(frame):
 
         aspect_ratio = long_side / short_side
 
-        # 灯条通常是细长区域
-        if aspect_ratio < 1.5 or aspect_ratio > 20:
+        if (
+            aspect_ratio < 1.5
+            or aspect_ratio > 20.0
+        ):
             continue
 
         box = cv2.boxPoints(rectangle).astype("int32")
@@ -74,7 +100,6 @@ def detect_lightbars(frame):
         )
 
     return detections
-
 
 def main():
     if len(sys.argv) != 3:
@@ -140,7 +165,7 @@ def main():
                     [box],
                     0,
                     (0, 255, 0),
-                    3,
+                    2,
                 )
 
                 cv2.putText(

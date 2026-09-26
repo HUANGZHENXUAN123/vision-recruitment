@@ -16,51 +16,72 @@ def main() -> int:
         print(f"无法读取掩膜图片: {mask_path}")
         return 1
 
-    kernel_small = cv2.getStructuringElement(
+    kernel_1x1 = cv2.getStructuringElement(
+        cv2.MORPH_RECT,
+        (1, 1),
+    )
+
+    kernel_3x3 = cv2.getStructuringElement(
         cv2.MORPH_RECT,
         (3, 3),
     )
 
-    kernel_large = cv2.getStructuringElement(
+    kernel_7x7 = cv2.getStructuringElement(
         cv2.MORPH_RECT,
         (7, 7),
     )
 
-    opened_small = cv2.morphologyEx(
+    opened_1x1 = cv2.morphologyEx(
         mask,
         cv2.MORPH_OPEN,
-        kernel_small,
+        kernel_1x1,
     )
 
-    closed_small = cv2.morphologyEx(
+    closed_1x1 = cv2.morphologyEx(
         mask,
         cv2.MORPH_CLOSE,
-        kernel_small,
+        kernel_1x1,
     )
 
-    opened_large = cv2.morphologyEx(
+    opened_3x3 = cv2.morphologyEx(
         mask,
         cv2.MORPH_OPEN,
-        kernel_large,
+        kernel_3x3,
     )
 
-    closed_large = cv2.morphologyEx(
+    closed_3x3 = cv2.morphologyEx(
         mask,
         cv2.MORPH_CLOSE,
-        kernel_large,
+        kernel_3x3,
+    )
+
+    opened_7x7 = cv2.morphologyEx(
+        mask,
+        cv2.MORPH_OPEN,
+        kernel_7x7,
+    )
+
+    closed_7x7 = cv2.morphologyEx(
+        mask,
+        cv2.MORPH_CLOSE,
+        kernel_7x7,
     )
 
     output_dir = Path("output")
     output_dir.mkdir(exist_ok=True)
 
     cv2.imwrite(str(output_dir / "mask_original.jpg"), mask)
-    cv2.imwrite(str(output_dir / "mask_open_3x3.jpg"), opened_small)
-    cv2.imwrite(str(output_dir / "mask_close_3x3.jpg"), closed_small)
-    cv2.imwrite(str(output_dir / "mask_open_7x7.jpg"), opened_large)
-    cv2.imwrite(str(output_dir / "mask_close_7x7.jpg"), closed_large)
+    cv2.imwrite(str(output_dir / "mask_open_1x1.jpg"), opened_1x1)
+    cv2.imwrite(str(output_dir / "mask_close_1x1.jpg"), closed_1x1)
+    cv2.imwrite(str(output_dir / "mask_open_3x3.jpg"), opened_3x3)
+    cv2.imwrite(str(output_dir / "mask_close_3x3.jpg"), closed_3x3)
+    cv2.imwrite(str(output_dir / "mask_open_7x7.jpg"), opened_7x7)
+    cv2.imwrite(str(output_dir / "mask_close_7x7.jpg"), closed_7x7)
 
     print("形态学处理完成，结果保存在 output/：")
     print("  mask_original.jpg")
+    print("  mask_open_1x1.jpg")
+    print("  mask_close_1x1.jpg")
     print("  mask_open_3x3.jpg")
     print("  mask_close_3x3.jpg")
     print("  mask_open_7x7.jpg")
