@@ -5,11 +5,12 @@ import cv2
 
 
 def main() -> int:
-    if len(sys.argv) != 2:
-        print("用法: python contours.py <掩膜图片路径>")
+    if len(sys.argv) != 3:
+        print("用法: python contours.py <掩膜图片路径> <对应原图路径>")
         return 1
 
     mask_path = Path(sys.argv[1])
+    original_path = Path(sys.argv[2])
     mask = cv2.imread(
         str(mask_path),
         cv2.IMREAD_GRAYSCALE,
@@ -19,10 +20,10 @@ def main() -> int:
         print(f"无法读取掩膜图片: {mask_path}")
         return 1
 
-    original_path = Path("test.jpg")
     original = cv2.imread(str(original_path))
 
     if original is None:
+
         print(f"无法读取原图: {original_path}")
         return 1
 
@@ -35,11 +36,11 @@ def main() -> int:
     result = original.copy()
     candidate_count = 0
 
-    min_area = 100
-    min_aspect_ratio = 1.5
-    max_aspect_ratio = 20.0
-    min_fill_ratio = 0.2
-    max_area = 1500  
+    min_area = 10
+    min_aspect_ratio = 1.0
+    max_aspect_ratio = 15.0
+    min_fill_ratio = 0.15
+    max_area = 5000  
     for contour in contours:
         area = cv2.contourArea(contour)
 
@@ -89,9 +90,6 @@ def main() -> int:
 
         label = (
             f"id={candidate_count} "
-            f"area={area:.0f} "
-            f"ratio={aspect_ratio:.1f} "
-            f"fill={fill_ratio:.2f}"
         )
 
         cv2.putText(
