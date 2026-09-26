@@ -10,16 +10,20 @@ def main() -> int:
         return 1
 
     mask_path = Path(sys.argv[1])
-    mask = cv2.imread(str(mask_path), cv2.IMREAD_GRAYSCALE)
+    mask = cv2.imread(
+        str(mask_path),
+        cv2.IMREAD_GRAYSCALE,
+    )
 
     if mask is None:
         print(f"无法读取掩膜图片: {mask_path}")
         return 1
 
-    original = cv2.imread("test.jpg")
+    original_path = Path("test.jpg")
+    original = cv2.imread(str(original_path))
 
     if original is None:
-        print("无法读取原图: test.jpg")
+        print(f"无法读取原图: {original_path}")
         return 1
 
     contours, _ = cv2.findContours(
@@ -31,10 +35,15 @@ def main() -> int:
     result = original.copy()
     candidate_count = 0
 
+    min_area = 100
+    min_aspect_ratio = 1.5
+    max_aspect_ratio = 20.0
+    min_fill_ratio = 0.2
+    max_area = 1500  
     for contour in contours:
         area = cv2.contourArea(contour)
 
-        if area < 100:
+        if area < min_area or area >max_area:
             continue
 
         rectangle = cv2.minAreaRect(contour)
@@ -49,7 +58,20 @@ def main() -> int:
 
         aspect_ratio = long_side / short_side
 
-        if aspect_ratio < 1.5 or aspect_ratio > 20:
+        if (
+            aspect_ratio < min_aspect_ratio
+            or aspect_ratio > max_aspect_ratio
+        ):
+            continue
+
+        rectangle_area = width * height
+
+        if rectangle_area <= 0:
+            continue
+
+        fill_ratio = area / rectangle_area
+
+        if fill_ratio < min_fill_ratio:
             continue
 
         box = cv2.boxPoints(rectangle).astype("int32")
@@ -65,9 +87,16 @@ def main() -> int:
         center_x = int(center[0])
         center_y = int(center[1])
 
+        label = (
+            f"id={candidate_count} "
+            f"area={area:.0f} "
+            f"ratio={aspect_ratio:.1f} "
+            f"fill={fill_ratio:.2f}"
+        )
+
         cv2.putText(
             result,
-            f"id={candidate_count} area={area:.0f} ratio={aspect_ratio:.1f}",
+            label,
             (center_x, center_y),
             cv2.FONT_HERSHEY_SIMPLEX,
             0.8,
@@ -79,9 +108,11 @@ def main() -> int:
             f"候选 {candidate_count}: "
             f"中心=({center[0]:.1f}, {center[1]:.1f}), "
             f"面积={area:.1f}, "
-            f"宽={width:.1f}, 高={height:.1f}, "
+            f"宽={width:.1f}, "
+            f"高={height:.1f}, "
             f"角度={angle:.1f}, "
-            f"长宽比={aspect_ratio:.2f}"
+            f"长宽比={aspect_ratio:.2f}, "
+            f"填充率={fill_ratio:.2f}"
         )
 
         candidate_count += 1
@@ -90,7 +121,11 @@ def main() -> int:
     output_dir.mkdir(exist_ok=True)
 
     output_path = output_dir / "contours_result.jpg"
-    cv2.imwrite(str(output_path), result)
+    saved = cv2.imwrite(str(output_path), result)
+
+    if not saved:
+        print(f"保存结果失败: {output_path}")
+        return 1
 
     print(f"原始轮廓数量: {len(contours)}")
     print(f"筛选后候选数量: {candidate_count}")

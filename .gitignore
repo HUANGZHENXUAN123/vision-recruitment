@@ -1,5 +1,7 @@
 .venv/
+*.mp4
 test.jpg
+test2.png
 output/
 __pycache__/
-*.pyc
+
