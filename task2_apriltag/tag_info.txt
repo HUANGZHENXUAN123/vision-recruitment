@@ -1,0 +1,6 @@
+Tag family: tag36h11
+Tag ID: 0
+Tag black border side length: 163.0 mm
+Tag size used by program: 0.163 m
+Coordinate unit in program: meter
+Camera calibration file: output/camera_params.npz
