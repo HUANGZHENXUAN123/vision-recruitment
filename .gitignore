@@ -4,4 +4,6 @@ test.jpg
 test2.png
 output/
 __pycache__/
-
+opencv_basics/debug_frame.jpg
+task2_apriltag/calibration_images/
+task2_apriltag/output/
