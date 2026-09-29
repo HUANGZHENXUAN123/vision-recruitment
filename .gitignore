@@ -7,3 +7,6 @@ __pycache__/
 opencv_basics/debug_frame.jpg
 task2_apriltag/calibration_images/
 task2_apriltag/output/
+task2_apriltag/tag_test.jpg
+task2_apriltag/tag_test_enhanced.jpg
+task2_apriltag/tag_test_inverted.jpg
