@@ -10,3 +10,5 @@ task2_apriltag/output/
 task2_apriltag/tag_test.jpg
 task2_apriltag/tag_test_enhanced.jpg
 task2_apriltag/tag_test_inverted.jpg
+task2_apriltag/no_tag.jpg
+task2_apriltag/tag_test_2.jpg
