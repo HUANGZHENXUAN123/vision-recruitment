@@ -586,6 +586,16 @@ git log --oneline -10
 git add README.md
 git commit -m "document vision recruitment project"
 ```
+## 参考资料
+
+- [OpenCV 官方文档](https://docs.opencv.org/)
+- [OpenCV Camera Calibration](https://docs.opencv.org/4.5.2/dc/dbb/tutorial_py_calibration.html)
+- [AprilTag 官方项目](https://github.com/AprilRobotics/apriltag)
+- [pupil-apriltags](https://github.com/pupil-labs/apriltags)
+- [pySerial 官方文档](https://pyserial.readthedocs.io/)
+- [SerialPortAssistant](https://github.com/KangLin/SerialPortAssistant/releases)
+- [COMTool](https://github.com/Neutree/COMTool)
+- RoboMaster 视觉组招新考核手册（26.9）
 
 ## 已知问题
 
