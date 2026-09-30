@@ -11,12 +11,12 @@
 
 ## 测试结果
 
-- [ ] Tag 出现时 valid=1
-- [ ] Tag 消失时 valid=0
-- [ ] Tag 再次出现后恢复 valid=1
-- [ ] seq 持续递增
-- [ ] 坐标单位为 mm
-- [ ] 旋转向量单位为 rad
-- [ ] XOR 校验正确
-- [ ] CRLF 正确
+- [x] Tag 出现时 valid=1
+- [x] Tag 消失时 valid=0
+- [x] Tag 再次出现后恢复 valid=1
+- [x] seq 持续递增
+- [x] 坐标单位为 mm
+- [x] 旋转向量单位为 rad
+- [x] XOR 校验正确
+- [x] CRLF 正确
 
