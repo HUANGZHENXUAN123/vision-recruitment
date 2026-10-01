@@ -70,12 +70,14 @@ def main() -> None:
 
     seq = 0
     start_time = time.monotonic()
+    send_period = 0.1
 
     try:
         with open_serial(port, baudrate) as sender:
             print(f"检测目标 ID={args.target_id}；通过 {port} 发送 CV1；按 q 退出")
 
             while True:
+                frame_start = time.monotonic()
                 ok, frame = camera.read()
                 if not ok:
                     print("无法读取摄像头")
@@ -143,6 +145,10 @@ def main() -> None:
                 cv2.imshow("AprilTag + CV1 serial", frame)
                 if cv2.waitKey(1) & 0xFF == ord("q"):
                     break
+
+                remaining = send_period - (time.monotonic() - frame_start)
+                if remaining > 0:
+                    time.sleep(remaining)
     except serial.SerialException as exc:
         print(f"串口错误：{exc}")
     finally:

@@ -13,11 +13,11 @@
 ## 2. 文件用途
 
 - `cv1_protocol.py`：Task3 的协议层，只负责校验、组帧和打开串口，可被其他主程序导入。
-- `detect_apriltag.py`：原 Task2 独立检测程序，保留用于单独排查相机和位姿问题。
+- `../task2_apriltag/detect_tag.py` 和 `../task2_apriltag/estimate_pose.py`：Task2 独立检测与位姿程序，用于单独排查视觉问题。
 - `detect_apriltag_serial.py`：整合后的主程序，连接“相机检测结果”和“CV1 串口输出”。
 - `config.json`：相机、Tag 尺寸和串口配置。
-- 桌面的 `serial_cv1_test.py`：Task3 独立模拟发送程序，保留用于排查串口链路。
-- 桌面的 `stage3_sender.txt`：一次运行输出记录，不是程序源码。
+- `logs/serial_receive.log`：串口助手实际接收日志。
+- `test_log.md`：固定报文、状态切换与校验测试记录。
 
 ## 3. 整合后的数据流
 
@@ -32,30 +32,30 @@
 ## 4. 运行前检查
 
 1. `config.json` 中的 `tag_size_m` 必须是 Tag 黑色外框的真实边长。
-2. 必须存在有效的 `calibration_data.npz`，相机分辨率应与标定时一致。
+2. 必须存在 `../task2_apriltag/output/camera_params.npz`，相机分辨率应与标定时一致。
 3. `serial_port` 填 Python 发送端；串口助手打开虚拟串口对的另一端。
 4. 两个程序不能打开同一个 COM 端口。
 
 ## 5. 运行方式
 
-在本目录打开 PowerShell：
+在仓库根目录打开 PowerShell：
 
 ```powershell
-python detect_apriltag_serial.py --camera 0 --target-id 0
+python task3_serial\detect_apriltag_serial.py --camera 1 --target-id 0
 ```
 
 临时指定其他串口时：
 
 ```powershell
-python detect_apriltag_serial.py --camera 0 --target-id 0 --port COM11
+python task3_serial\detect_apriltag_serial.py --camera 1 --target-id 0 --port COM11
 ```
 
 按 `q` 正常退出。
 
 ## 6. 分层排错顺序
 
-1. 先运行 `detect_apriltag.py`，确认相机、标定和位姿正常。
-2. 再运行桌面 `serial_cv1_test.py`，确认虚拟串口链路正常。
+1. 先运行 `task2_apriltag/estimate_pose.py`，确认标定和位姿正常。
+2. 再用 `cv1_protocol.py` 的固定报文配合串口助手确认链路正常。
 3. 两项都正常后，运行 `detect_apriltag_serial.py`。
 
 这样可以快速判断故障来自视觉部分还是串口部分。

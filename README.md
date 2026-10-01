@@ -73,20 +73,17 @@ vision-recruitment/
 │   └── output/
 ├── task1_lightbar/
 │   ├── detect_video.py
-│   ├── input.mp4
-│   └── output/
+│   ├── README.md
+│   └── representative_frames/
 ├── task2_apriltag/
 │   ├── calibrate_camera.py
 │   ├── detect_tag.py
 │   ├── estimate_pose.py
-│   ├── calibration_images/
+│   ├── README.md
 │   ├── calibration_info.txt
 │   ├── tag_info.txt
 │   ├── pose_experiment.md
-│   └── output/
-│       ├── camera_params.npz
-│       ├── pose_result.jpg
-│       └── tag_detection.jpg
+│   └── output/              # 本地生成，未纳入 Git
 └── task3_serial/
     ├── README.md
     ├── config.json
@@ -156,10 +153,11 @@ python task1_lightbar/detect_video.py \
 | --- | --- |
 | 第一个路径 | 输入视频路径 |
 | 第二个路径 | 输出视频路径 |
-| HSV 下限 | (90, 80, 60) |
+| HSV 下限 | (80, 120, 110) |
 | HSV 上限 | (135, 255, 255) |
-| 形态学卷积核 | 3 × 3 |
-| 最小轮廓面积 | 100 |
+| B-R 差分阈值 | 40 |
+| 形态学卷积核 | 1 × 1（对比实验后保留流程） |
+| 最小轮廓面积 | 3 |
 | 最大轮廓面积 | 100000 |
 | 长宽比范围 | 1.5 ～ 20 |
 
@@ -174,7 +172,7 @@ python task1_lightbar/detect_video.py \
 - 候选区域面积。
 - 候选区域长宽比。
 
-输出视频：
+输出视频由程序在本地生成：
 
 ```
 task1_lightbar/output/lightbar_result.mp4
@@ -226,7 +224,7 @@ solvePnP 位姿估计
 python task2_apriltag/calibrate_camera.py
 ```
 
-标定结果：
+标定结果由程序在本地生成（当前被 `.gitignore` 排除）：
 
 ```
 task2_apriltag/output/camera_params.npz
@@ -384,16 +382,16 @@ task3_serial/config.json
 
 ### 运行方式
 
-在 Windows PowerShell 中进入任务三目录：
+在 Windows PowerShell 中进入仓库根目录：
 
 ```powershell
-Set-Location "\\wsl$\Ubuntu-22.04\home\user32716\vision-recruitment\task3_serial"
+Set-Location "C:\Users\32716\Desktop\vision-recruitment-win"
 ```
 
 运行程序：
 
 ```powershell
-python .\detect_apriltag_serial.py `
+python .\task3_serial\detect_apriltag_serial.py `
     --camera 1 `
     --target-id 0 `
     --port COM11
@@ -531,10 +529,11 @@ task3_serial/logs/serial_receive.log
 ```
 task1_lightbar/
 ├── detect_video.py
-├── input.mp4
-└── output/
-    └── lightbar_result.mp4
+├── README.md
+└── representative_frames/
 ```
+
+输入视频与完整标注视频未纳入 Git，需在最终问卷或 README 中补充可访问的下载链接。
 
 ### 任务二
 
@@ -543,15 +542,13 @@ task2_apriltag/
 ├── calibrate_camera.py
 ├── detect_tag.py
 ├── estimate_pose.py
-├── calibration_images/
+├── README.md
 ├── calibration_info.txt
 ├── tag_info.txt
-├── pose_experiment.md
-└── output/
-    ├── camera_params.npz
-    ├── pose_result.jpg
-    └── tag_detection.jpg
+└── pose_experiment.md
 ```
+
+标定原图、`camera_params.npz` 和位姿演示图片当前未纳入 Git，需另附下载链接或在容量允许时提交。
 
 ### 任务三
 
